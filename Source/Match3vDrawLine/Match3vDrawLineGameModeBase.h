@@ -40,6 +40,7 @@ public :
 	//Constructor
 	AMatch3vDrawLineGameModeBase();
 
+	//Array to store the selection of tiles upto the minimum selection specified
 	TArray<ASQTile*> ArrSelectedTiles;
 
 	UFUNCTION()
@@ -50,4 +51,7 @@ public :
 
 	UFUNCTION()
 	void AddTileSelection();
+
+	UFUNCTION(BlueprintPure)
+	int32 ReturnScore();
 };

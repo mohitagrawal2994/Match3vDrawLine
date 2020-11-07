@@ -56,58 +56,74 @@ void AMatch3vDrawLineGameModeBase::CreateTileSelection(AActor* TouchedActor)
 		//Checking if the selection is a new one
 		if ((LastSelectedTile != nullptr) && (LastSelectedTile != CurrentTile))
 		{
-			//Check if the selected items are of the same type or not
-			if (LastSelectedTile->SQTileTypeID == CurrentTile->SQTileTypeID)
+			//Checking if the selected tile has already been preselected and added to array
+			bool IsPreselected = false;
+			for (int i = 0; i < ArrSelectedTiles.Num(); i++)
 			{
-				//Setting bool to false stating that current no tile is adjacent
-				bIsAdjacent = false;
-			
-				//Check if the new tile is adjacent to the existing selected tile
-				if (((LastSelectedTile->GridAddressX + 1) == CurrentTile->GridAddressX) && (LastSelectedTile->GridAddressY == CurrentTile->GridAddressY))
+				if (CurrentTile == ArrSelectedTiles[i])
 				{
-					bIsAdjacent = true;
+					ClearTileSelection();
+					IsPreselected = true;
+					break;
 				}
-				else if (((LastSelectedTile->GridAddressX - 1) == CurrentTile->GridAddressX) && (LastSelectedTile->GridAddressY == CurrentTile->GridAddressY))
+			}
+			//Executed when the selected item is unique and does not exist in array
+			if (IsPreselected != true)
+			{
+				//Check if the selected items are of the same type or not
+				if (LastSelectedTile->SQTileTypeID == CurrentTile->SQTileTypeID)
 				{
-					bIsAdjacent = true;
-				}
-				else if ((LastSelectedTile->GridAddressX == CurrentTile->GridAddressX) && ((LastSelectedTile->GridAddressY + 1) == CurrentTile->GridAddressY))
-				{
-					bIsAdjacent = true;
-				}
-				else if ((LastSelectedTile->GridAddressX == CurrentTile->GridAddressX) && ((LastSelectedTile->GridAddressY - 1) == CurrentTile->GridAddressY))
-				{
-					bIsAdjacent = true;
-				}
-				else
-				{
+					//Setting bool to false stating that current no tile is adjacent
 					bIsAdjacent = false;
-				}
-							
-				//If found adjacent then add to array
-				if (bIsAdjacent)
-				{
-					AddTileSelection();
-					if (ArrSelectedTiles.Num() == iMinMatchNumber)
+
+					//Check if the new tile is adjacent to the existing selected tile
+					if (((LastSelectedTile->GridAddressX + 1) == CurrentTile->GridAddressX) && (LastSelectedTile->GridAddressY == CurrentTile->GridAddressY))
 					{
-						for (int32 i = 0; i < ArrSelectedTiles.Num(); i++)
+						bIsAdjacent = true;
+					}
+					else if (((LastSelectedTile->GridAddressX - 1) == CurrentTile->GridAddressX) && (LastSelectedTile->GridAddressY == CurrentTile->GridAddressY))
+					{
+						bIsAdjacent = true;
+					}
+					else if ((LastSelectedTile->GridAddressX == CurrentTile->GridAddressX) && ((LastSelectedTile->GridAddressY + 1) == CurrentTile->GridAddressY))
+					{
+						bIsAdjacent = true;
+					}
+					else if ((LastSelectedTile->GridAddressX == CurrentTile->GridAddressX) && ((LastSelectedTile->GridAddressY - 1) == CurrentTile->GridAddressY))
+					{
+						bIsAdjacent = true;
+					}
+					else
+					{
+						bIsAdjacent = false;
+					}
+
+					//If found adjacent then add to array
+					if (bIsAdjacent)
+					{
+						AddTileSelection();
+						if (ArrSelectedTiles.Num() == iMinMatchNumber)
 						{
-							ArrSelectedTiles[i]->Destroy();
+							for (int32 i = 0; i < ArrSelectedTiles.Num(); i++)
+							{
+								ArrSelectedTiles[i]->Destroy();
+							}
+							TotalScore += MyGrid->SQTileLibrary[LastSelectedTile->SQTileTypeID].Points * iMinMatchNumber;
+							ClearTileSelection();
 						}
-						TotalScore += MyGrid->SQTileLibrary[LastSelectedTile->SQTileTypeID].Points * iMinMatchNumber;
+					}
+					else
+					{
 						ClearTileSelection();
 					}
+
 				}
 				else
 				{
 					ClearTileSelection();
 				}
-				
 			}
-			else
-			{
-				ClearTileSelection();
-			}
+
 		}
 		//Checking whether the selected item is again selected
 		else if (LastSelectedTile == CurrentTile)
@@ -140,4 +156,9 @@ void AMatch3vDrawLineGameModeBase::AddTileSelection()
 {
 	ArrSelectedTiles.Add(CurrentTile);
 	LastSelectedTile = CurrentTile;
+}
+
+int32 AMatch3vDrawLineGameModeBase::ReturnScore()
+{
+	return TotalScore;
 }
