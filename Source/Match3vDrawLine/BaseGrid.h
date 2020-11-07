@@ -15,6 +15,12 @@ struct FSQTileType
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile")
 	class UMaterialInstanceConstant* SQTileMaterial = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile")
+	FVector ScaleValue = FVector(1.0f, 1.0f, 1.0f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile")
+	int32 Points;
+
 	//Member to set the tile property like is it movable or not
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile")
 	TSubclassOf<class ASQTile> SQTileClass;
@@ -45,21 +51,17 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Background")
 	class UStaticMeshComponent* MyBG;
 
-	//Minimum number of matching tiles required
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Tile)
-	int32 iMinimumMatchNumber;
-
 	//The width of the grid
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Tile)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid")
 	int32 iGridWidth;
 
 	//The height of the grid
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Tile)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid")
 	int32 iGridHeight;
 
-	//List to save the spawned tiles with location
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TArray<class ASQTile*> ArrGameTiles;
+	//Variable which defines the minimum selection required to make a match
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid")
+	int32 iMinMatchNumber;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FSQTileType> SQTileLibrary;
@@ -71,6 +73,6 @@ public:
 	int32 GetTileID();
 
 	//Function to spawn Tiles
-	void SpawnSQTiles(FVector SpawnLocation, int32 CurrentTileID);
+	void SpawnSQTiles(FVector SpawnLocation, int32 CurrentTileID, int32 Row, int32 Column);
 
 };

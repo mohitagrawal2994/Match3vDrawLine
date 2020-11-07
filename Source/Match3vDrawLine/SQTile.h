@@ -14,19 +14,44 @@ class MATCH3VDRAWLINE_API ASQTile : public APaperSpriteActor
 {
 	GENERATED_BODY()
 
-public:
+class AMatch3vDrawLineGameModeBase* MyGM;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Tile")
+public:
+	//Constructor
+	ASQTile();
+
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Tile")
 	int32 GridAddressX;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Tile")
+	UPROPERTY(BlueprintReadOnly, Category = "Tile")
 	int32 GridAddressY;
 
 	UPROPERTY(BlueprintReadOnly)
 	int32 SQTileTypeID;
 
-	UFUNCTION(BlueprintCallable)
-	void SetGridAddress(FVector SpawnLocation);
+	UPROPERTY(BlueprintReadOnly)
+	FVector NewScaleValue;
 
-	
+	UPROPERTY(BlueprintReadOnly)
+	FVector OrgScaleValue;
+
+	UFUNCTION()
+	void SetGridAddress(int32 Row, int32 Column);
+
+	UFUNCTION()
+	void SetTileMaterial(class UMaterialInstanceConstant* TileMaterial);
+
+	//This function is called when a particular tile is selected
+	UFUNCTION()
+	void SelectTile(AActor* TouchedActor, FKey ButtonPressed);
+
+	UFUNCTION()
+	void MouseOverTile();
+
+	UFUNCTION()
+	void ResetScale();
+
 };

@@ -14,9 +14,9 @@ ABaseGrid::ABaseGrid()
 	MyBG = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyBG"));
 	RootComponent = MyBG;
 
-	iMinimumMatchNumber = 3;
 	iGridWidth = 6;
 	iGridHeight = 7;
+	iMinMatchNumber = 3;
 
 	OffsetValue = 5;
 
@@ -39,7 +39,6 @@ void ABaseGrid::Tick(float DeltaTime)
 
 void ABaseGrid::InitializeGrid()
 {
-	ArrGameTiles.Empty(iGridWidth * iGridHeight);
 	FVector SpawnLocation;
 	FVector BGLocation = MyBG->GetRelativeLocation();
 	for (int32 Column = 0; Column < iGridWidth; ++Column)
@@ -48,41 +47,48 @@ void ABaseGrid::InitializeGrid()
 		{
 			int32 CurrentTileID =  GetTileID();
 
-			//Setting the spawn location to be from the BG position in X and Y
-			SpawnLocation = FVector((BGLocation.X + (Column * OffsetValue)), 0.0f, (BGLocation.Z + (Row * OffsetValue)));
-			SpawnSQTiles(SpawnLocation, CurrentTileID);
+			if (CurrentTileID != -1)
+			{
+				//Setting the spawn location to be from the BG position in X and Y
+				SpawnLocation = FVector((BGLocation.X + (Column * OffsetValue)), 0.0f, (BGLocation.Z + (Row * OffsetValue)));
+				SpawnSQTiles(SpawnLocation, CurrentTileID, Row, Column);
+			}
+			
 		}
 	}
 }
 
 int32 ABaseGrid::GetTileID()
 {
+	if (SQTileLibrary.Num() <= 0)
+	{
+		return -1;
+	}
 	int32 GeneratedTileID = int32(FMath::FRandRange(0, SQTileLibrary.Num()));
 	return GeneratedTileID;
 	
 }
 
-void ABaseGrid::SpawnSQTiles(FVector SpawnLocation, int32 CurrentTileID)
+void ABaseGrid::SpawnSQTiles(FVector SpawnLocation, int32 CurrentTileID, int32 Row, int32 Column)
 {
 	// Check for a valid World:
 	UWorld* const World = GetWorld();
 	if (World)
 	{
-		// Set the spawn parameters.
+		// Setting the spawn parameters.
 		FActorSpawnParameters SpawnParams;
 		SpawnParams.Owner = this;
 		SpawnParams.Instigator = GetInstigator();
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		// Setting The tile Rotation value on spawn so that they do not rotate
+		// Setting The tile Rotation value To 0
 		FRotator SpawnRotation(0.0f, 0.0f, 0.0f);
 		
 		// Spawning the tile.
 		ASQTile* const NewSQTile = World->SpawnActor<ASQTile>(SQTileLibrary[CurrentTileID].SQTileClass, SpawnLocation, SpawnRotation, SpawnParams);
 
-		///*NewSQTile->GetRenderComponent()->SetMobility(EComponentMobility::Movable);*/
 		NewSQTile->SQTileTypeID = CurrentTileID;
-		NewSQTile->SetGridAddress(SpawnLocation);
-		//ArrGameTiles[SpawnLocation.X + (SpawnLocation.Y*iGridWidth)] = NewSQTile;
+		NewSQTile->SetGridAddress(Row, Column);
+		NewSQTile->SetTileMaterial(SQTileLibrary[CurrentTileID].SQTileMaterial);
+		NewSQTile->NewScaleValue = SQTileLibrary[CurrentTileID].ScaleValue;
 	}
 }
-
