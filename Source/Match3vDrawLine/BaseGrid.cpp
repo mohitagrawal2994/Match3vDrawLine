@@ -11,13 +11,16 @@ ABaseGrid::ABaseGrid()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	//Setting Default values to the class members
 	MyBG = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MyBG"));
 	RootComponent = MyBG;
 
 	iGridWidth = 6;
 	iGridHeight = 7;
+	//Setting min match required to 3
 	iMinMatchNumber = 3;
 
+	//Setting default spawn offset multiplier
 	OffsetValue = 5;
 
 }
@@ -45,6 +48,7 @@ void ABaseGrid::InitializeGrid()
 	{
 		for (int32 Row = 0; Row < iGridHeight; ++Row)
 		{
+			//Getting the type of tile to spawn from the Tile Array
 			int32 CurrentTileID =  GetTileID();
 
 			if (CurrentTileID != -1)

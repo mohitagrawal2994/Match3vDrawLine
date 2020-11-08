@@ -15,9 +15,11 @@ struct FSQTileType
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile")
 	class UMaterialInstanceConstant* SQTileMaterial = nullptr;
 
+	//Used to set the scale of the SpriteActor when the object is selected
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile")
 	FVector ScaleValue = FVector(1.0f, 1.0f, 1.0f);
 
+	//Property to set the amount of points to add when a match is found
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Tile")
 	int32 Points;
 
@@ -47,7 +49,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	//StaticMesh that holds the backround material
+	//StaticMesh that holds the backround
 	UPROPERTY(EditDefaultsOnly, Category = "Background")
 	class UStaticMeshComponent* MyBG;
 
@@ -63,6 +65,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Grid")
 	int32 iMinMatchNumber;
 
+	//Array to hold a list of type of tiles to be spawned on the grid
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FSQTileType> SQTileLibrary;
 
@@ -72,7 +75,7 @@ public:
 	//Function to get the type of tile to spawn
 	int32 GetTileID();
 
-	//Function to spawn Tiles
+	//Function to spawn the Tiles Instances
 	void SpawnSQTiles(FVector SpawnLocation, int32 CurrentTileID, int32 Row, int32 Column);
 
 };

@@ -8,6 +8,7 @@ void ABasePlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//To Show mouse during gameplay and to enable its Clickc during game
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 }

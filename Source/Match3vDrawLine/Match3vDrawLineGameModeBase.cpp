@@ -34,7 +34,7 @@ void AMatch3vDrawLineGameModeBase::BeginPlay()
 	//Setting score to 0
 	TotalScore = 0;
 
-	//Findind the existing grid in the project and getting their width and height dimensions
+	//Findind the existing grid in the project and getting their width, height dimensions and Grid Match Properties
 	TArray<AActor*>FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ABaseGrid::StaticClass(), FoundActors);
 
@@ -102,6 +102,8 @@ void AMatch3vDrawLineGameModeBase::CreateTileSelection(AActor* TouchedActor)
 					if (bIsAdjacent)
 					{
 						AddTileSelection();
+
+						//Check to see if MinMatch required is achieved to remove them from the grid
 						if (ArrSelectedTiles.Num() == iMinMatchNumber)
 						{
 							for (int32 i = 0; i < ArrSelectedTiles.Num(); i++)
